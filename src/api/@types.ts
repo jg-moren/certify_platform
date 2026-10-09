@@ -23,13 +23,9 @@ export interface CompanySignUp extends AuthSignUp {
 
 export interface AuthUserReponse {
   _id: string;
-  phone?: string | null;
-  cpf?: string | null;
-  birth_date?: string | null;
-  avatar_url?: string | null;
   fullname?: string;
-  razao_social?: string;
   email: string;
+  razao_social?: string;
   role: "user" | "admin" | "empresa";
   created_at?: string;
   updated_at?: string;
@@ -63,8 +59,8 @@ export interface CertificateInDb {
 
 export interface CertificateRequest {
   fullname: string;
-  access_key: string;
-  event_id: string;
+  access_key?: string | undefined;
+  event_id: string | number;
   status: status;
   email: string;
 }
@@ -84,6 +80,48 @@ export interface CertificateListResponse extends BaseResponse{
     items: CertificateInDb[];
   };
 }
+
+/**
+ * =========================================
+ * Event
+ * =========================================
+ */
+
+export interface EventInDb {
+  id: string;
+  name: string;
+  institution: string;
+  workload: number;
+  description: string;
+  start_date: Date;
+  end_date: Date;
+  created_at?: Date | null;
+}
+
+export interface EventRequest {
+  name: string;
+  institution: string;
+  workload: number;
+  description: string;
+  start_date: Date;
+  end_date: Date;
+  created_at?: Date | null;
+}
+
+export interface EventUpdateRequest {
+  name?: string | null;
+  workload?: number | null;
+  description?: string | null;
+  start_date?: Date | null;
+  end_date?: Date | null;
+}
+
+export interface EventResponse extends BaseResponse{
+  data: {
+    event: EventInDb;
+  };
+}
+
 
 /**
  * =========================================

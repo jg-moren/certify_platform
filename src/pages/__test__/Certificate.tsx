@@ -6,38 +6,45 @@ import { useCheckAvailableCertificate } from '@/hooks/Certificate/useCheckAvaila
 import { useValidateCertificate } from '@/hooks/Certificate/useValidateCertificate';
 
 import type { CertificateRequest } from '@/api/@types';
+import styles from './Test.module.css';
 
 function TestListCertificate() {
-
-    const { data, isLoading, isSuccess, refetch, error} = useListCertificateByUserId();
-    const { auth } = useAuthStoreData()
+    const { data, isLoading, isSuccess, refetch, error } = useListCertificateByUserId();
+    const { auth } = useAuthStoreData();
 
     return (
-        <div>
+        <div className={styles.card}>
+            <h3 className={styles.title}>Listar Certificados do Usuário</h3>
 
-            <div> AuthStoreData: {JSON.stringify(auth, null, 2)} </div>    
-            
-            <button onClick={() => refetch()}>
-                refresh
-            </button>
-
-            <div>
-                {isLoading ? (<div>carregando</div>) : 
-                (!isSuccess ? 
-                    (<div>{error?.message}</div>) 
-                : 
-                    (<div>{JSON.stringify(data, null, 2)}</div>))
-                }
+            <div className={styles.field}>
+                <span className={styles.label}>Auth Store Data</span>
+                <div className={styles.responseBox}>
+                    <pre className={styles.codeOutput}>{JSON.stringify(auth, null, 2)}</pre>
+                </div>
             </div>
 
+            <button className={styles.button} onClick={() => refetch()}>
+                Atualizar Lista
+            </button>
+
+            <div className={styles.field}>
+                <span className={styles.label}>Resultado</span>
+                <div className={styles.responseBox}>
+                    {isLoading ? (
+                        <span>Carregando...</span>
+                    ) : !isSuccess ? (
+                        <span>Erro: {error?.message}</span>
+                    ) : (
+                        <pre className={styles.codeOutput}>{JSON.stringify(data, null, 2)}</pre>
+                    )}
+                </div>
+            </div>
         </div>
     );
-};
+}
 
 function TestCreateCertificate() {
-
     const { mutate } = useCreateCertificate();
-
 
     const [id_user, setIdUser] = useState('');
     const [name, setName] = useState('');
@@ -55,124 +62,135 @@ function TestCreateCertificate() {
             status: "pending"
         };
 
-        mutate({userId: id_user, certificate_data: formData});
-    }
-    
+        mutate({ userId: id_user, certificate_data: formData });
+    };
+
     return (
-        <div>
+        <div className={styles.card}>
+            <h3 className={styles.title}>Criar Certificado</h3>
 
-           <input
-                type="text"
-                value={id_user}
-                onChange={(e) => setIdUser(e.target.value)}
-                placeholder="id_user"
-            />
+            <div className={styles.field}>
+                <label className={styles.label}>ID do Usuário</label>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={id_user}
+                    onChange={(e) => setIdUser(e.target.value)}
+                    placeholder="ID do Usuário"
+                />
+            </div>
 
-            <br/>
+            <div className={styles.field}>
+                <label className={styles.label}>Nome Completo</label>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Nome completo"
+                />
+            </div>
 
-            <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="name"
-            />
+            <div className={styles.field}>
+                <label className={styles.label}>E-mail</label>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="email@exemplo.com"
+                />
+            </div>
 
-            <br/>
+            <div className={styles.field}>
+                <label className={styles.label}>ID do Evento</label>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={event}
+                    onChange={(e) => setEvent(e.target.value)}
+                    placeholder="ID do Evento"
+                />
+            </div>
 
-            <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="email"
-            />
-
-            <br/>
-
-            <input
-                type="text"
-                value={event}
-                onChange={(e) => setEvent(e.target.value)}
-                placeholder="event"
-            />
-
-            <br/>
-
-            <button onClick={create}>
-                create
+            <button className={styles.button} onClick={create}>
+                Criar Certificado
             </button>
-
         </div>
     );
 }
 
 function TestGetCertificate() {
-
     const [idCertificate, setIdCertificate] = useState('');
-
     const { data, isLoading, isError, error } = useCheckAvailableCertificate(idCertificate);
 
     return (
-        <div>
-            <input
-                type="text"
-                value={idCertificate}
-                onChange={(e) => {
-                        setIdCertificate(e.target.value)
-                    }
-                }
-                placeholder="idCertificate"
-            />
+        <div className={styles.card}>
+            <h3 className={styles.title}>Verificar Disponibilidade do Certificado</h3>
 
-            <div>
-                {isLoading ? "carregando" : 
-                    isError ? error?.message :
-                    JSON.stringify(data, null, 2)
-                }
+            <div className={styles.field}>
+                <label className={styles.label}>ID do Certificado</label>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={idCertificate}
+                    onChange={(e) => setIdCertificate(e.target.value)}
+                    placeholder="Insira o ID do Certificado"
+                />
             </div>
 
+            <div className={styles.responseBox}>
+                {isLoading ? (
+                    <span>Carregando...</span>
+                ) : isError ? (
+                    <span>Erro: {error?.message}</span>
+                ) : (
+                    <pre className={styles.codeOutput}>{JSON.stringify(data, null, 2)}</pre>
+                )}
+            </div>
         </div>
-    )
-
+    );
 }
 
 function TestValidateCertificate() {
-
     const [accessKey, setAccessKey] = useState('');
-
     const { data, isLoading, isError, error } = useValidateCertificate(accessKey);
 
     return (
-        <div>
-            <input
-                type="text"
-                value={accessKey}
-                onChange={(e) => {
-                        setAccessKey(e.target.value)
-                    }
-                }
-                placeholder="access_key"
-            />
+        <div className={styles.card}>
+            <h3 className={styles.title}>Validar Certificado por Chave</h3>
 
-            <div>
-                {isLoading ? "carregando" : 
-                    isError ? error?.message :
-                    JSON.stringify(data, null, 2)
-                }
+            <div className={styles.field}>
+                <label className={styles.label}>Chave de Acesso</label>
+                <input
+                    className={styles.input}
+                    type="text"
+                    value={accessKey}
+                    onChange={(e) => setAccessKey(e.target.value)}
+                    placeholder="Insira a Access Key"
+                />
             </div>
 
+            <div className={styles.responseBox}>
+                {isLoading ? (
+                    <span>Carregando...</span>
+                ) : isError ? (
+                    <span>Erro: {error?.message}</span>
+                ) : (
+                    <pre className={styles.codeOutput}>{JSON.stringify(data, null, 2)}</pre>
+                )}
+            </div>
         </div>
-    )
+    );
 }
 
 export function TestCertificate() {
-
-
     return (
-        <div>
-            <TestListCertificate/>
-            <TestCreateCertificate/>
-            <TestGetCertificate/>
-            <TestValidateCertificate/>
+        <div className={styles.container}>
+            <TestListCertificate />
+            <TestCreateCertificate />
+            <TestGetCertificate />
+            <TestValidateCertificate />
         </div>
-    )
+    );
 }

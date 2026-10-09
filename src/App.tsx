@@ -84,6 +84,9 @@ const CertificateValidationPage = lazy(() =>
  * Paginas para testar a integracao com a API
  * ===========================================
  */
+const TestAuth = lazy(() => import("./pages/__test__/Auth").then((m) => ({ default: m.TestAuth })));
+const TestCertificate = lazy(() => import("./pages/__test__/Certificate").then((m) => ({ default: m.TestCertificate })));
+const TestEvent = lazy(() => import("./pages/__test__/Event").then((m) => ({ default: m.TestEvent })));
 /**===========================================
  * 
  * ===========================================
@@ -157,6 +160,12 @@ function App() {
             <Route path="modelos" element={<NotFound />} />
             <Route path="relatorios" element={<NotFound />} />
           </Route>
+        </Route>
+
+        <Route path="/teste" >
+          <Route path="auth" element={<TestAuth />} />
+          <Route path="certificate" element={<TestCertificate />} />
+          <Route path="event" element={<TestEvent />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
